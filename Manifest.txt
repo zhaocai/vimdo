@@ -1,0 +1,8 @@
+.autotest
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+bin/vimremote
+lib/vimremote.rb
+test/test_vimremote.rb
