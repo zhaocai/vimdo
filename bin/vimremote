@@ -1,3 +1,83 @@
 #!/usr/bin/env ruby
 
-abort "you need to write me"
+require 'shellwords'
+require 'os'
+require 'subcommand'
+require 'open3'
+require 'vimremote'
+
+def parse_opt()
+  include Subcommands
+  options = {}
+
+  command :diff do |opts|
+    opts.banner = "Usage: diff [options]"
+    opts.description = "diff two files"
+    opts.on("-f", "--[no-]force", "force") do |v|
+      options[:force] = v
+    end
+    opts.on("-s SERVER", "--server SERVER", "server name") do |v|
+      options[:servername] = v
+    end
+  end
+
+  command :command do |opts|
+    opts.banner = "Usage: command [options]"
+    opts.description = "exec vim command"
+    opts.on("-s SERVER", "--server", "server name") do |v|
+      options[:servername] = v
+    end
+
+  end
+
+  command :merge do |opts|
+    opts.banner = "Usage: merge [options]"
+    opts.description =
+      '$LOCAL(= mine) $MERGED(= yours) '\
+      '$REMOTE(= merged output) [$BASE(= common parent)]'
+
+    opts.on("-s SERVER", "--server SERVER", "server name") do |v|
+      options[:servername] = v
+    end
+
+    opts.on("-q", "--[no-]quiet", "quietly run ") do |v|
+      options[:quiet] = v
+    end
+  end
+
+  alias_command :diff!, 'diff', '--force'
+
+  cmd = opt_parse()
+
+  options[:cmd] = cmd
+  options[:argv] = ARGV
+
+  return options
+end
+
+
+
+
+
+
+if RUBY_VERSION < "1.9"
+  puts "rubu version 1.9+ is required!"
+  exit(1)
+end
+options = parse_opt()
+
+vr = VimRemote.new(options)
+
+do_method = 'do_' + options[:cmd]
+begin
+  vr.send(do_method)
+rescue NoMethodError
+  puts "#{do_method} has not implemented!"
+end
+
+
+
+# ~~ modeline  ~~ [[[1 -------------------------------------------------------
+# vim: set ft=ruby ts=2 sw=2 tw=78 fdm=syntax fmr=[[[,]]] fdl=1 :
+
+
