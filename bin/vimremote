@@ -1,14 +1,32 @@
 #!/usr/bin/env ruby
 
-require 'shellwords'
-require 'os'
 require 'subcommand'
-require 'open3'
 require 'vimremote'
 
 def parse_opt()
   include Subcommands
   options = {}
+
+  global_options do |opts|
+    opts.banner = "Usage: #{__FILE__} [options] [subcommand [options]]"
+    opts.description = "control vim remote server with useful commands"
+
+    opts.separator ""
+    opts.separator "Global options are:"
+
+    opts.on("-s SERVER", "--server SERVER", "server name") do |v|
+      options[:servername] = v
+    end
+
+    opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+      options[:verbose] = v
+    end
+
+    # opts.on("-q", "--[no-]quiet", "quietly run ") do |v|
+    #   options[:quiet] = v
+    # end
+
+  end
 
   command :diff do |opts|
     opts.banner = "Usage: diff [options]"
@@ -16,18 +34,11 @@ def parse_opt()
     opts.on("-f", "--[no-]force", "force") do |v|
       options[:force] = v
     end
-    opts.on("-s SERVER", "--server SERVER", "server name") do |v|
-      options[:servername] = v
-    end
   end
 
   command :command do |opts|
     opts.banner = "Usage: command [options]"
-    opts.description = "exec vim command"
-    opts.on("-s SERVER", "--server", "server name") do |v|
-      options[:servername] = v
-    end
-
+    opts.description = "execute vim command"
   end
 
   command :merge do |opts|
@@ -35,21 +46,11 @@ def parse_opt()
     opts.description =
       '$LOCAL(= mine) $MERGED(= yours) '\
       '$REMOTE(= merged output) [$BASE(= common parent)]'
-
-    opts.on("-s SERVER", "--server SERVER", "server name") do |v|
-      options[:servername] = v
-    end
-
-    opts.on("-q", "--[no-]quiet", "quietly run ") do |v|
-      options[:quiet] = v
-    end
   end
 
-  alias_command :diff!, 'diff', '--force'
+  # alias_command :diff!, 'diff', '--force'
 
-  cmd = opt_parse()
-
-  options[:cmd] = cmd
+  options[:subcommand] = opt_parse()
   options[:argv] = ARGV
 
   return options
@@ -68,7 +69,7 @@ options = parse_opt()
 
 vr = VimRemote.new(options)
 
-do_method = 'do_' + options[:cmd]
+do_method = 'do_' + options[:subcommand]
 begin
   vr.send(do_method)
 rescue NoMethodError

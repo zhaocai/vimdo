@@ -1,12 +1,19 @@
+require 'open3'
+require 'shellwords'
+require 'os'
+
 class VimRemote
   VERSION = '1.0.1'
 
   attr_accessor :opts
-  attr_reader :errs
+  attr_reader   :errs
 
 
   def initialize(options)
-    @opts = {}
+    @opts = {
+      :servername => '' ,
+    }
+
     if OS.mac?
       @vim = 'mvim'
     else
@@ -14,10 +21,6 @@ class VimRemote
     end
 
     @opts.merge!(options)
-
-    unless @opts.include?(:servername)
-      @opts[:servername] = ''
-    end
 
     @errs = {
       :no_server => "E247: no registered server named"
