@@ -7,9 +7,9 @@ def parse_opt()
   include Subcommands
   options = {}
 
-  appname = File.basename($0)
+  @appname = File.basename($0)
   global_options do |opts|
-    opts.banner = "Usage: #{appname} [global options] subcommand [options]"
+    opts.banner = "Usage: #{@appname} [global options] subcommand [options]"
     opts.description = "Control vim remote server to do useful commands"
 
     opts.separator ""
@@ -59,7 +59,25 @@ def parse_opt()
   return options
 end
 
+# task dependencies
+class Counter < Thor
+  desc "one", "Prints 1"
+  def one
+    puts 1
+  end
 
+  desc "two", "Prints 1, 2"
+  def two
+    invoke :one
+    puts 2
+  end
+
+  desc "three", "Prints 1, 2, 3"
+  def three
+    invoke :two
+    puts 3
+  end
+end
 
 
 
