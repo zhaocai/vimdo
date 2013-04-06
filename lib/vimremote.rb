@@ -3,7 +3,6 @@ require 'shellwords'
 require 'os'
 
 class VimRemote
-  VERSION = '1.0.1'
 
   attr_accessor :opts
   attr_reader   :errs
