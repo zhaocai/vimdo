@@ -1,8 +1,6 @@
 require "vimdo/cli"
 require "autocompletion"
 
-require "awesome_print"
-
 module VimDo
 
   def self.autocomplete(words)
