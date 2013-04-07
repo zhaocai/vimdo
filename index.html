@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Vimdo :  Automate tasks with vim" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Vimdo</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/zhaocai/vimdo">View on GitHub</a>
+
+          <h1 id="project_title">Vimdo</h1>
+          <h2 id="project_tagline"> Automate tasks with vim</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/zhaocai/vimdo/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/zhaocai/vimdo/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>vimdo</h1>
+
+<ul>
+<li>home  :: <a href="http://zhaocai.github.com/vimdo">http://zhaocai.github.com/vimdo</a>
+</li>
+<li>rdoc  :: <a href="http://rubydoc.info/gems/vimdo/">http://rubydoc.info/gems/vimdo/</a>
+</li>
+<li>code  :: <a href="https://github.com/zhaocai/vimdo">https://github.com/zhaocai/vimdo</a>
+</li>
+<li>bugs  :: <a href="https://github.com/zhaocai/vimdo/issues">https://github.com/zhaocai/vimdo/issues</a>
+</li>
+</ul><h2>DESCRIPTION:</h2>
+
+<p>Vimdo is a ruby gem to automate tasks with vim remote servers.
+Predefined tasks include diff, merge, etc.  You can define your own recipes
+to run tasks with Vim. For example, you can define <code>DirDiff</code> recipe:</p>
+
+<div class="highlight"><pre><span class="k">module</span> <span class="nn">VimDo</span>
+  <span class="k">class</span> <span class="nc">CLI</span> <span class="o">&lt;</span> <span class="no">Thor</span>
+
+    <span class="n">desc</span> <span class="s2">"dirdiff"</span><span class="p">,</span> <span class="s2">"directory diff in vim"</span>
+    <span class="k">def</span> <span class="nf">dirdiff</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="p">)</span>
+      <span class="o">[</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
+        <span class="k">unless</span> <span class="no">File</span><span class="o">.</span><span class="n">directory?</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+          <span class="k">raise</span> <span class="no">PathError</span> <span class="s2">"</span><span class="si">#{</span><span class="n">f</span><span class="si">}</span><span class="s2"> is not directory!"</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+
+      <span class="n">from</span><span class="p">,</span> <span class="n">to</span> <span class="o">=</span> <span class="o">[</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">commands</span><span class="p">(</span><span class="sx">%Q{exec 'DirDiff ' fnameescape("</span><span class="si">#{</span><span class="n">from</span><span class="si">}</span><span class="sx">") fnameescape("</span><span class="si">#{</span><span class="n">to</span><span class="si">}</span><span class="sx">")}</span><span class="p">)</span>
+    <span class="k">end</span>
+
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</pre></div>
+
+<p>Then run <code>vimdo dirdiff path/to/a path/to/b</code> from the command line or other tools</p>
+
+<h2>INSTALLATION:</h2>
+
+<ul>
+<li><code>[sudo] macgem install vimdo</code></li>
+</ul><h2>COMMAND LINE INTERFACE:</h2>
+
+<h3>VimDo commands:</h3>
+
+<pre><code>  vimdo commands        # execute commands in vim
+  vimdo diff            # diff in vim
+  vimdo edit            # edit file +filename+ with Vim
+  vimdo help [COMMAND]  # Describe available commands or one specific command
+  vimdo merge           # LOCAL(= mine), MERGED(= yours), REMOTE(= merged output), [BASE(= common parent)]
+  vimdo normal          # switch vim to normal mode and type the given keys
+</code></pre>
+
+<h3>Options:</h3>
+
+<pre><code>  -s, [--servername=servername to connect]
+                           # Default: VIM
+  -e, [--executable=specifiy vim executable]
+  -u, [--vimrc=specifiy vimrc]
+                           # Default: ~/.vimdorc
+  [--no-color=disable colorization in output]
+  -v, [--verbose=enable verbose output mode]
+</code></pre>
+
+<h2>RECIPES:</h2>
+
+<p>The path to search for recipes is defined in <code>~/.vimdorc</code> in yaml format.</p>
+
+<div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">:recipes</span> <span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">~/.vimdo/recipes/</span>
+
+</pre></div>
+
+<h2>KNOWN ISSUE:</h2>
+
+<h2>DEVELOPERS:</h2>
+
+<p>After checking out the source, run:</p>
+
+<p>$ rake newb</p>
+
+<p>This task will install any missing dependencies, run the tests/specs,
+and generate the RDoc.</p>
+
+<h2>LICENSE:</h2>
+
+<p>Copyright (c) 2013 Zhao Cai <a href="mailto:caizhaoff@gmail.com">caizhaoff@gmail.com</a></p>
+
+<p>This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.</p>
+
+<p>This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
+
+<p>You should have received a copy of the GNU General Public License along with
+this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Vimdo maintained by <a href="https://github.com/zhaocai">zhaocai</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
