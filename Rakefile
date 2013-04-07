@@ -9,7 +9,7 @@ Hoe.plugin :git
 Hoe.plugin :test
 Hoe.plugin :version
 
-Hoe.spec 'vimremote' do
+Hoe.spec 'vimdo' do
 
   developer('Zhao Cai', 'caizhaoff@gmail.com')
   license 'GPL-3'
