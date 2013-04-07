@@ -1,36 +1,78 @@
-# vimremote
+# vimdo
 
-* home  :: http://zhaocai.github.com/vimremote
-* rdoc  :: http://rubydoc.info/gems/vimremote/
-* code  :: https://github.com/zhaocai/vimremote
-* bugs  :: https://github.com/zhaocai/vimremote/issues
+* home  :: http://zhaocai.github.com/vimdo
+* rdoc  :: http://rubydoc.info/gems/vimdo/
+* code  :: https://github.com/zhaocai/vimdo
+* bugs  :: https://github.com/zhaocai/vimdo/issues
 
 
 ## DESCRIPTION:
 
-Vimremote is a ruby gem to automate tasks with vim remote servers. with useful recipes like
-Predefined tasks include diff, merge, fileencoding, etc.  And you can define your own recipes
+Vimdo is a ruby gem to automate tasks with vim remote servers.
+Predefined tasks include diff, merge, etc.  You can define your own recipes
+to run tasks with Vim. For example, you can define `DirDiff` recipe:
+
+```ruby
+module VimDo
+  class CLI < Thor
+
+    desc "dirdiff", "directory diff in vim"
+    def dirdiff(from, to)
+      [from, to].each do |f|
+        unless File.directory?(f)
+          raise PathError "#{f} is not directory!"
+        end
+      end
+
+      from, to = [from, to].map {|f| File.expand_path(f) }
+      commands(%Q{exec 'DirDiff ' fnameescape("#{from}") fnameescape("#{to}")})
+    end
+
+  end
+end
+
+```
+
+Then run `vimdo dirdiff path/to/a path/to/b` from the command line or other tools
 
 
 ## INSTALLATION:
 
-* `[sudo] macgem install vimremote`
+* `[sudo] macgem install vimdo`
 
 
 
 ## COMMAND LINE INTERFACE:
 
-### 1. Tasks (Subcommands):
+### VimDo commands:
+      vimdo commands        # execute commands in vim
+      vimdo diff            # diff in vim
+      vimdo edit            # edit file +filename+ with Vim
+      vimdo help [COMMAND]  # Describe available commands or one specific command
+      vimdo merge           # LOCAL(= mine), MERGED(= yours), REMOTE(= merged output), [BASE(= common parent)]
+      vimdo normal          # switch vim to normal mode and type the given keys
+
+### Options:
+      -s, [--servername=servername to connect]
+						       # Default: VIM
+      -e, [--executable=specifiy vim executable]
+      -u, [--vimrc=specifiy vimrc]
+						       # Default: ~/.vimdorc
+	  [--no-color=disable colorization in output]
+      -v, [--verbose=enable verbose output mode]
+
+## RECIPES:
+
+The path to search for recipes is defined in `~/.vimdorc` in yaml format.
+
+```yaml
+---
+:recipes :
+  - ~/.vimdo/recipes/
+
+```
 
 
-### 2. Diff
-
-### 3. Merge
-
-
-### 4. Other Tasks:
-
-      > tag help [TASK]
 
 ## KNOWN ISSUE:
 
