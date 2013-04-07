@@ -7,24 +7,34 @@ module VimDo
     include Thor::Actions
     package_name "VimDo"
 
-    class_option "name",
+    class_option :name,
       :type    => :string,
       :banner  => "servername to connect",
       :default => 'VIM',
       :aliases => ["--servername","-s" ]
-    class_option "executable",
+    class_option :executable,
       :type    => :string,
       :banner  => "specifiy vim executable",
       :aliases => "-e"
-    class_option "vimrc",
+    class_option :foreground,
+      :type    => :boolean,
+      :banner  => "Foreground: Don't fork when starting GUI",
+      :default => false,
+      :aliases => "-f"
+    class_option :vimrc,
       :type    => :string,
-      :default => "~/.vimdorc",
-      :banner  => "specifiy vimrc",
+      :default => File.expand_path("~/.vimrc"),
+      :banner  => "path to vimrc",
       :aliases => "-u"
+    class_option :vimdorc,
+      :type    => :string,
+      :default => File.expand_path("~/.vimdorc"),
+      :banner  => "path to vimdo rc",
+      :aliases => "-c"
     class_option "no-color",
       :type   => :boolean,
       :banner => "disable colorization in output"
-    class_option "verbose",
+    class_option :verbose,
       :type    => :boolean,
       :banner  => "enable verbose output mode",
       :aliases => "-v"
@@ -34,7 +44,6 @@ module VimDo
       VimDo.ui = UI::Shell.new(options)
       VimDo.ui.level = "debug" if options["verbose"]
 
-      say options
     end
 
     desc "commands", "execute commands in vim"

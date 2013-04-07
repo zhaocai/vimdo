@@ -26,7 +26,10 @@ module VimDo
     end
 
     def connect(options= {})
-      Vimrunner::Server.new(options).connect
+      Vimrunner::Server.new(
+        # symbolize keys
+        options.inject({}){ |h, (n,v)| h[n.to_sym] = v; h }
+      ).connect(:spawn => true)
     end
 
     def load_recipes
