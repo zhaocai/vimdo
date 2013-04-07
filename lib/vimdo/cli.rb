@@ -5,11 +5,8 @@ module VimDo
 
   class CLI < Thor
     include Thor::Actions
+    package_name "VimDo"
 
-    class_option "recipe-path",
-      :type    => :string,
-      :banner  => "optional path to locate vim recipes",
-      :aliases => "-p"
     class_option "servername",
       :type    => :string,
       :banner  => "servername to connect",
@@ -21,6 +18,7 @@ module VimDo
       :aliases => "-e"
     class_option "vimrc",
       :type    => :string,
+      :default => "~/.vimdorc",
       :banner  => "specifiy vimrc",
       :aliases => "-u"
     class_option "no-color",
@@ -35,12 +33,11 @@ module VimDo
       super
       VimDo.ui = UI::Shell.new(options)
       VimDo.ui.level = "debug" if options["verbose"]
-
     end
 
-    desc "command", "execute command in vim"
-    def command(cmd)
-      vim.normal(":<C-u>#{cmd}<CR>")
+    desc "commands", "execute commands in vim"
+    def commands(*cmd)
+      vim.normal(":<C-u>#{cmd.join(' <Bar> ')}<CR>")
     end
 
     desc "normal",  "switch vim to normal mode and type the given keys"
@@ -59,11 +56,11 @@ module VimDo
       [from, to].each do |f|
         raise PathError "#{f} is not readable!" unless File.readable?(f)
       end
-      from = File.absolute_path(from)
-      to = File.absolute_path(to)
+      from = File.expand_path(from)
+      to = File.expand_path(to)
+      from, to = [from, to].map {|f| File.expand_path(f) }
 
-      command('tabnew<Bar>edit ' + vim.fesc(from) +
-              '<Bar>diffsplit '  + vim.fesc(to))
+      commands('tabnew', 'edit '+vim.fesc(from), 'diffsplit '+vim.fesc(to))
     end
 
     desc "merge", "LOCAL(= mine), MERGED(= yours), REMOTE(= merged output), [BASE(= common parent)]"
@@ -74,12 +71,12 @@ module VimDo
 
       [local, merge, remote].each do |f|
         unless File.readable?(f)
-          raise PathError "#{f} is not readable!" unless File.readable?(f)
+          raise PathError "#{f} is not readable!"
         end
       end
       raise PathError "#{base} is not readable!" unless File.readable?(base) or base.nil?
 
-      local, merge, remote = [local, merge, remote].map {|f| File.absolute_path(f) }
+      local, merge, remote = [local, merge, remote].map {|f| File.expand_path(f) }
 
       merge_command =
         'tabnew<Bar>edit ' + vim.fesc(local) +
@@ -88,20 +85,20 @@ module VimDo
 
       if base
         base_split_command =
-          "<Bar>diffsplit #{vim.fesc(File.absolute_path(base))}<Bar>wincmd J"
+          "<Bar>diffsplit #{vim.fesc(File.expand_path(base))}<Bar>wincmd J"
       else
         base_split_command = ''
       end
 
       switch_command = "<Bar>2wincmd w"
 
-      command(merge_command + base_split_command + switch_command)
+      commands(merge_command + base_split_command + switch_command)
     end
 
 
   private
     def vim
-      @vim ||= VimDo.connect(options[:servername], options)
+      @vim ||= VimDo.connect(options)
     end
   end
 end

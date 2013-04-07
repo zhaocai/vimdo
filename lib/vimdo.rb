@@ -1,9 +1,8 @@
-require 'open3'
 require "vimrunner"
 
 require 'vimdo/version'
 require 'vimdo/ui'
-
+require 'yaml'
 
 module VimDo
 
@@ -16,17 +15,31 @@ module VimDo
   class PathError           < VimDoError; status_code(14) ; end
 
   class << self
-    attr_writer :ui
+    attr_writer :ui, :rc
 
     def ui
       @ui ||= UI.new
     end
 
-    def connect(name, options= {})
-      Vimrunner::Server.new(:name => name).connect
+    def rc
+      @rc ||= File.expand_path("~/.vimdorc")
+    end
+
+    def connect(options= {})
+      options[:name] = options[:servername]
+      Vimrunner::Server.new(options).connect
+    end
+
+    def load_recipes
+      if File.exists?(rc)
+        settings = YAML::load( File.read(rc) )
+        settings.fetch(:recipes, []).map {|f| File.expand_path(f) }.each { |rp|
+          Dir[ File.join(rp, '*.vimdo') ].each { |r|
+            load r
+          }
+        }
+      end
     end
 
   end
-
 end
-

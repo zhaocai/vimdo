@@ -2,7 +2,7 @@
 
 # Trap interrupts to quit cleanly. See
 # https://twitter.com/mitchellh/status/283014103189053442
-Signal.trap("INT") { exit 1 }
+# Signal.trap("INT") { exit 1 }
 
 ($LOAD_PATH << File.expand_path("../../lib", __FILE__)).uniq!
 require 'rubygems' unless defined? Gem # rubygems is only needed in 1.8
@@ -10,60 +10,9 @@ require 'rubygems' unless defined? Gem # rubygems is only needed in 1.8
 require 'vimdo'
 require 'vimdo/cli'
 require 'vimdo/friendly_error'
-load File.expand_path("~/.apps/vimdo/recipe/dirdiff.rb")
-
-VimDo.with_friendly_errors { VimDo::CLI.start }
-# def parse_opt()
-#   include Subcommands
-#   options = {}
-#
-#
-#   command :diff do |opts|
-#     opts.banner = "Usage: diff [options]"
-#     opts.description = "diff two files"
-#     # opts.on("-f", "--[no-]force", "force") do |v|
-#     #   options[:force] = v
-#     # end
-#   end
-#
-#   command :command do |opts|
-#     opts.banner = "Usage: command [options]"
-#     opts.description = "execute vim command"
-#   end
-#
-#   command :merge do |opts|
-#     opts.banner = "Usage: merge [options]"
-#     opts.description =
-#       'LOCAL(= mine) MERGED(= yours) '\
-#       'REMOTE(= merged output) [BASE(= common parent)]'
-#   end
-#
-#   # alias_command :diff!, 'diff', '--force'
-#
-#   add_help_option
-#
-#   options[:subcommand] = opt_parse()
-#   options[:argv] = ARGV
-#
-#   return options
-# end
 
 
-
-# if RUBY_VERSION < "1.9"
-#   puts "rubu version 1.9+ is required!"
-#   exit(1)
-# end
-# options = parse_opt()
-#
-# vr = VimDo.new(options)
-#
-# do_method = 'do_' + options[:subcommand]
-# begin
-#   vr.send(do_method)
-# rescue NoMethodError
-#   puts "#{do_method} has not implemented!"
-# end
+VimDo.with_friendly_errors { VimDo.load_recipes ; VimDo::CLI.start }
 
 
 
