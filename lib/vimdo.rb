@@ -26,7 +26,6 @@ module VimDo
     end
 
     def connect(options= {})
-      options[:name] = options[:servername]
       Vimrunner::Server.new(options).connect
     end
 

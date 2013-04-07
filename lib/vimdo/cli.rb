@@ -7,11 +7,11 @@ module VimDo
     include Thor::Actions
     package_name "VimDo"
 
-    class_option "servername",
+    class_option "name",
       :type    => :string,
       :banner  => "servername to connect",
       :default => 'VIM',
-      :aliases => "-s"
+      :aliases => ["--servername","-s" ]
     class_option "executable",
       :type    => :string,
       :banner  => "specifiy vim executable",
@@ -33,6 +33,8 @@ module VimDo
       super
       VimDo.ui = UI::Shell.new(options)
       VimDo.ui.level = "debug" if options["verbose"]
+
+      say options
     end
 
     desc "commands", "execute commands in vim"
