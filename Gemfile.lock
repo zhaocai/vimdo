@@ -1,15 +1,23 @@
 PATH
   remote: .
   specs:
-    vimdo (1.0.2.20130407103207)
+    vimdo (1.0.2.20130407140526)
+      autocompletion (~> 0.0.3)
       thor (~> 0.18.0)
       vimrunner (~> 0.2.2)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    autocompletion (0.0.3)
+    awesome_print (1.1.0)
     hoe (3.5.2)
       rake (>= 0.8, < 11.0)
+    hoe-gemspec (1.0.0)
+      hoe (>= 2.2.0)
+    hoe-git (1.5.0)
+      hoe (>= 2.2.0)
+    hoe-version (1.2.0)
     json (1.7.7)
     rake (10.0.4)
     rdoc (3.12.2)
@@ -21,7 +29,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  hoe (~> 3.5)
+  awesome_print
+  hoe
+  hoe-gemspec
+  hoe-git
+  hoe-version
   rake (>= 10.0.0)
   rdoc (~> 3.10)
   vimdo!

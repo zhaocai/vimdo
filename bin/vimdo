@@ -9,14 +9,19 @@ require 'rubygems' unless defined? Gem # rubygems is only needed in 1.8
 
 require 'vimdo'
 require 'vimdo/cli'
+require 'vimdo/autocomplete'
 require 'vimdo/friendly_error'
 
 
-VimDo.with_friendly_errors { VimDo.load_recipes ; VimDo::CLI.start }
+VimDo.with_friendly_errors {
+  VimDo.load_recipes
+  if ARGV[0] == 'autocomplete'
+    ARGV.shift
+    VimDo.autocomplete(ARGV)
+  else
+    VimDo::CLI.start
+  end
+}
 
-
-
-# ~~ modeline  ~~ [[[1 -------------------------------------------------------
-# vim: set ft=ruby ts=2 sw=2 tw=78 fdm=syntax fmr=[[[,]]] fdl=1 :
 
 

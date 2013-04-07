@@ -106,6 +106,10 @@ module VimDo
       commands(merge_command + base_split_command + switch_command)
     end
 
+    desc "autocomplete", "print subcommands for shell completion"
+    def autocomplete()
+      raise UndefinedCommandError, "autocomplete should be intercepted."
+    end
 
   private
     def vim

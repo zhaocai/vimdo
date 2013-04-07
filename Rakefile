@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'hoe'
 
+Hoe.plugin :bundler
 Hoe.plugin :gemspec
 Hoe.plugin :git
 Hoe.plugin :test
@@ -15,10 +16,12 @@ Hoe.spec 'vimdo' do
 
   extra_deps << ['vimrunner', '~> 0.2.2']
   extra_deps << ['thor', '~> 0.18.0']
+  extra_deps << ['autocompletion', '~> 0.0.3']
 
   extra_dev_deps << ['rake', '>= 10.0.0']
+  extra_dev_deps << ['hoe'] << ['hoe-gemspec'] << ['hoe-git'] << ['hoe-version']
+  extra_dev_deps << ['awesome_print']
   # extra_dev_deps << ['rspec', '>= 2.13']
-  # extra_dev_deps << ['hoe'] << ['hoe-gemspec'] << ['hoe-git'] << ['hoe-version']
   # extra_dev_deps << ['guard'] << ['guard-rspec'] << ['terminal-notifier-guard'] << ['growl']
 end
 

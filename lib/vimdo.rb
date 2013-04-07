@@ -12,7 +12,8 @@ module VimDo
     end
   end
 
-  class PathError           < VimDoError; status_code(14) ; end
+  class PathError                  < VimDoError; status_code(14) ; end
+  class UndefinedCommandError      < VimDoError; status_code(15) ; end
 
   class << self
     attr_writer :ui, :rc
