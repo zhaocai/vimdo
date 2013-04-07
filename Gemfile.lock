@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    vimdo (1.0.2.20130407140526)
+    vimdo (1.0.2.20130407152509)
       autocompletion (~> 0.0.3)
       thor (~> 0.18.0)
       vimrunner (~> 0.2.2)

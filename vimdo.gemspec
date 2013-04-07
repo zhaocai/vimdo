@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "vimdo"
-  s.version = "1.0.2.20130407140526"
+  s.version = "1.0.2.20130407152509"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Zhao Cai"]
@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email = ["caizhaoff@gmail.com"]
   s.executables = ["vimdo"]
   s.extra_rdoc_files = ["History.txt", "Manifest.txt"]
-  s.files = ["Gemfile", "Gemfile.lock", "History.txt", "Manifest.txt", "README.md", "Rakefile", "bin/vimdo", "lib/vimdo.rb", "lib/vimdo/cli.rb", "lib/vimdo/friendly_error.rb", "lib/vimdo/ui.rb", "lib/vimdo/version.rb"]
+  s.files = ["Gemfile", "Gemfile.lock", "History.txt", "Manifest.txt", "README.md", "Rakefile", "bin/vimdo", "completion/bash/vimdo", "completion/zsh/_vimdo", "lib/vimdo.rb", "lib/vimdo/autocomplete.rb", "lib/vimdo/cli.rb", "lib/vimdo/friendly_error.rb", "lib/vimdo/ui.rb", "lib/vimdo/version.rb", "vimdo.gemspec"]
   s.homepage = "http://zhaocai.github.com/vimdo"
   s.licenses = ["GPL-3"]
   s.rdoc_options = ["--main", "README.md"]

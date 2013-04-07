@@ -5,8 +5,12 @@ Manifest.txt
 README.md
 Rakefile
 bin/vimdo
+completion/bash/vimdo
+completion/zsh/_vimdo
 lib/vimdo.rb
+lib/vimdo/autocomplete.rb
 lib/vimdo/cli.rb
 lib/vimdo/friendly_error.rb
 lib/vimdo/ui.rb
 lib/vimdo/version.rb
+vimdo.gemspec

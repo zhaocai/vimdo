@@ -10,8 +10,8 @@ module VimDo
     global_options = VimDo::CLI.class_options.values.map { |v| v.switch_name }
 
     if words.empty?
-      puts AutoCompletion.words(subcommands + global_options).complete()
-    elsif words.length == 1
+      puts (subcommands + global_options).flatten
+    elsif words.length == 1 && ! subcommands.include?(words[0])
       puts AutoCompletion.words(subcommands).complete(words[0])
     else
       options = global_options
@@ -20,7 +20,12 @@ module VimDo
         options << current_task.options.values.map { |v| v.switch_name }
       end
       options = options.flatten.delete_if { |o| words.include? o }
-      puts AutoCompletion.words(options.flatten).complete(words[-1])
+
+      if words[-1]
+        puts AutoCompletion.words(options.flatten).complete(words[-1])
+      else 
+        puts options.flatten
+      end
     end
   end
 end
