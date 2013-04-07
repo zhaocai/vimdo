@@ -1,39 +1,23 @@
 #!/usr/bin/env ruby
 
+# Trap interrupts to quit cleanly. See
+# https://twitter.com/mitchellh/status/283014103189053442
+Signal.trap("INT") { exit 1 }
 
 ($LOAD_PATH << File.expand_path("../../lib", __FILE__)).uniq!
 require 'rubygems' unless defined? Gem # rubygems is only needed in 1.8
 
 require 'vimdo'
 require 'vimdo/cli'
+require 'vimdo/friendly_error'
 load File.expand_path("~/.apps/vimdo/recipe/dirdiff.rb")
-VimRemote::CLI.start
+
+VimDo.with_friendly_errors { VimDo::CLI.start }
 # def parse_opt()
 #   include Subcommands
 #   options = {}
-# 
-#   @appname = File.basename($0)
-#   global_options do |opts|
-#     opts.banner = "Usage: #{@appname} [global options] subcommand [options]"
-#     opts.description = "Control vim remote server to do useful commands"
-# 
-#     opts.separator ""
-#     opts.separator "Global Options:"
-# 
-#     opts.on("-s SERVER", "--server SERVER", "Vim servername") do |v|
-#       options[:servername] = v
-#     end
-# 
-#     opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
-#       options[:verbose] = v
-#     end
-# 
-#     # opts.on("-q", "--[no-]quiet", "quietly run ") do |v|
-#     #   options[:quiet] = v
-#     # end
-# 
-#   end
-# 
+#
+#
 #   command :diff do |opts|
 #     opts.banner = "Usage: diff [options]"
 #     opts.description = "diff two files"
@@ -41,26 +25,26 @@ VimRemote::CLI.start
 #     #   options[:force] = v
 #     # end
 #   end
-# 
+#
 #   command :command do |opts|
 #     opts.banner = "Usage: command [options]"
 #     opts.description = "execute vim command"
 #   end
-# 
+#
 #   command :merge do |opts|
 #     opts.banner = "Usage: merge [options]"
 #     opts.description =
 #       'LOCAL(= mine) MERGED(= yours) '\
 #       'REMOTE(= merged output) [BASE(= common parent)]'
 #   end
-# 
+#
 #   # alias_command :diff!, 'diff', '--force'
-# 
+#
 #   add_help_option
-# 
+#
 #   options[:subcommand] = opt_parse()
 #   options[:argv] = ARGV
-# 
+#
 #   return options
 # end
 
@@ -71,9 +55,9 @@ VimRemote::CLI.start
 #   exit(1)
 # end
 # options = parse_opt()
-# 
-# vr = VimRemote.new(options)
-# 
+#
+# vr = VimDo.new(options)
+#
 # do_method = 'do_' + options[:subcommand]
 # begin
 #   vr.send(do_method)

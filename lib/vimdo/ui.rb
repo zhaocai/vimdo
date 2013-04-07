@@ -1,4 +1,4 @@
-module VimRemote
+module VimDo
   class UI
     def warn(message, newline = nil)
     end
