@@ -1,8 +1,8 @@
 require 'open3'
 require "vimrunner"
 
-require 'vimremote/version'
-require 'vimremote/ui'
+require 'vimdo/version'
+require 'vimdo/ui'
 
 
 module VimRemote

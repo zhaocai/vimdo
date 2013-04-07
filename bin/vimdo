@@ -4,8 +4,8 @@
 ($LOAD_PATH << File.expand_path("../../lib", __FILE__)).uniq!
 require 'rubygems' unless defined? Gem # rubygems is only needed in 1.8
 
-require 'vimremote'
-require 'vimremote/cli'
+require 'vimdo'
+require 'vimdo/cli'
 load File.expand_path("~/.apps/vimdo/recipe/dirdiff.rb")
 VimRemote::CLI.start
 # def parse_opt()

@@ -1,5 +1,5 @@
 require 'thor'
-require "vimremote/ui"
+require "vimdo/ui"
 
 module VimRemote
 
