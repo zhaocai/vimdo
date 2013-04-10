@@ -11,12 +11,30 @@
 #      Copyright : © 2013 by Zhao Cai,
 #                  Released under current GPL license.
 # --------------- ------------------------------------------------------------
-local ret
 
+local curcontext state line ret expl
+
+curcontext="$curcontext"
 ret=1
 
-vimdo_comp=( ${(z)"$(_call_program vimdo vimdo autocomplete $words[2,-1])"} )
-_describe 'vimdo' vimdo_comp && ret=0
+_arguments  -C            \
+    '1: :->tasks'          \
+    '*: :->args' && ret=0
+
+case $state in
+    tasks)
+	tasks=( ${(z)"$(_call_program vimdo vimdo autocomplete $words[2,-1])"} )
+	_describe -t commands 'vimdo tasks' tasks && ret=0
+	;;
+
+    args)
+	tasks=( ${(z)"$(_call_program vimdo vimdo autocomplete $words[2,-1])"} )
+	if [[ -z "$tasks" ]] ; then
+	    _path_files
+	else 
+	    _describe -t commands 'vimdo tasks' tasks && ret=0
+	fi
+esac
 
 return ret
 
