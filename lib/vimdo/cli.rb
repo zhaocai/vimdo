@@ -71,7 +71,7 @@ module VimDo
       to = File.expand_path(to)
       from, to = [from, to].map {|f| File.expand_path(f) }
 
-      commands('tabnew', 'edit '+vim.filename_escape(from), 'diffsplit '+vim.filename_escape(to))
+      commands('tabnew', 'edit '+vim.escape_filename(from), 'diffsplit '+vim.escape_filename(to))
     end
 
     desc "merge", "LOCAL(= mine), MERGED(= yours), REMOTE(= merged output), [BASE(= common parent)]"
@@ -90,13 +90,13 @@ module VimDo
       local, merge, remote = [local, merge, remote].map {|f| File.expand_path(f) }
 
       merge_command =
-        'tabnew<Bar>edit ' + vim.filename_escape(local) +
-        '<Bar>diffsplit '  + vim.filename_escape(merge) +
-        '<Bar>diffsplit '  + vim.filename_escape(remote)
+        'tabnew<Bar>edit ' + vim.escape_filename(local) +
+        '<Bar>diffsplit '  + vim.escape_filename(merge) +
+        '<Bar>diffsplit '  + vim.escape_filename(remote)
 
       if base
         base_split_command =
-          "<Bar>diffsplit #{vim.filename_escape(File.expand_path(base))}<Bar>wincmd J"
+          "<Bar>diffsplit #{vim.escape_filename(File.expand_path(base))}<Bar>wincmd J"
       else
         base_split_command = ''
       end
