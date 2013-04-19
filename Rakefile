@@ -28,7 +28,7 @@ end
 %w{major minor patch}.each { |v|
   desc "Bump #{v.capitalize} Version"
   task "bump:#{v}", [:message] => ["version:bump:#{v}"] do |t, args|
-    m = args[:message] ? args[:message] : "Bump version to #{ENV["VERSION"]}"
+    m = args[:message] ? args[:message] : "[release] bump version to #{ENV["VERSION"]}"
     sh "git commit -am '#{m}'"
   end
 }
