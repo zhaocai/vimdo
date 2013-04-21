@@ -59,7 +59,7 @@ module VimDo
 
     desc "edit",  "edit file +filename+ with Vim"
     def edit(filename)
-      vim.edit(filename)
+      vim.edit(File.expand_path(filename))
     end
 
     desc "diff", "diff in vim"

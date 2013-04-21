@@ -14,7 +14,7 @@ Hoe.spec 'vimdo' do
   developer('Zhao Cai', 'caizhaoff@gmail.com')
   license 'GPL-3'
 
-  extra_deps << ['vimrunner', '~> 0.2.2']
+  extra_deps << ['vimrunner', '>= 0.3.0']
   extra_deps << ['thor', '~> 0.18.0']
   extra_deps << ['autocompletion', '~> 0.0.3']
 
