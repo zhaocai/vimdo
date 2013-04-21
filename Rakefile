@@ -15,8 +15,8 @@ Hoe.spec 'vimdo' do
   license 'GPL-3'
 
   extra_deps << ['vimrunner', '>= 0.3.0']
-  extra_deps << ['thor', '~> 0.18.0']
-  extra_deps << ['autocompletion', '~> 0.0.3']
+  extra_deps << ['thor', '>= 0.18.0']
+  extra_deps << ['autocompletion', '>= 0.0.3']
 
   extra_dev_deps << ['rake', '>= 10.0.0']
   extra_dev_deps << ['hoe'] << ['hoe-gemspec'] << ['hoe-git'] << ['hoe-version']
