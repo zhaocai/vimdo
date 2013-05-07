@@ -60,6 +60,7 @@ module VimDo
     desc "edit",  "edit file +filename+ with Vim"
     def edit(filename)
       vim.edit(File.expand_path(filename))
+      vim.foreground
     end
 
     desc "diff", "diff in vim"
@@ -71,8 +72,12 @@ module VimDo
       to = File.expand_path(to)
       from, to = [from, to].map {|f| File.expand_path(f) }
 
-      commands('tabnew', 'edit '+vim.escape_filename(from), 'diffsplit '+vim.escape_filename(to))
+      commands('tabnew', 'edit '+Vimrunner::Path.new(from), 'diffsplit '+Vimrunner::Path.new(to))
+      vim.foreground
     end
+
+
+
 
     desc "merge", "LOCAL(= mine), MERGED(= yours), REMOTE(= merged output), [BASE(= common parent)]"
     long_desc <<-LONGDESC
@@ -90,13 +95,13 @@ module VimDo
       local, merge, remote = [local, merge, remote].map {|f| File.expand_path(f) }
 
       merge_command =
-        'tabnew<Bar>edit ' + vim.escape_filename(local) +
-        '<Bar>diffsplit '  + vim.escape_filename(merge) +
-        '<Bar>diffsplit '  + vim.escape_filename(remote)
+        'tabnew<Bar>edit ' + Vimrunner::Path.new(local) +
+        '<Bar>diffsplit '  + Vimrunner::Path.new(merge) +
+        '<Bar>diffsplit '  + Vimrunner::Path.new(remote)
 
       if base
         base_split_command =
-          "<Bar>diffsplit #{vim.escape_filename(File.expand_path(base))}<Bar>wincmd J"
+          "<Bar>diffsplit #{Vimrunner::Path.new(File.expand_path(base))}<Bar>wincmd J"
       else
         base_split_command = ''
       end
@@ -104,6 +109,7 @@ module VimDo
       switch_command = "<Bar>2wincmd w"
 
       commands(merge_command + base_split_command + switch_command)
+      vim.foreground
     end
 
     desc "autocomplete", "print subcommands for shell completion"
