@@ -8,36 +8,36 @@ module VimDo
     package_name "VimDo"
 
     class_option :name,
-      :type    => :string,
-      :banner  => "servername to connect",
-      :default => 'VIM',
-      :aliases => ["--servername","-s" ]
+    :type    => :string,
+    :banner  => "servername to connect",
+    :default => 'VIM',
+    :aliases => ["--servername","-s" ]
     class_option :executable,
-      :type    => :string,
-      :banner  => "specifiy vim executable",
-      :aliases => "-e"
+    :type    => :string,
+    :banner  => "specifiy vim executable",
+    :aliases => "-e"
     class_option :foreground,
-      :type    => :boolean,
-      :banner  => "Foreground: Don't fork when starting GUI",
-      :default => false,
-      :aliases => "-f"
+    :type    => :boolean,
+    :banner  => "Foreground: Don't fork when starting GUI",
+    :default => false,
+    :aliases => "-f"
     class_option :vimrc,
-      :type    => :string,
-      :default => File.expand_path("~/.vimrc"),
-      :banner  => "path to vimrc",
-      :aliases => "-u"
+    :type    => :string,
+    :default => File.expand_path("~/.vimrc"),
+    :banner  => "path to vimrc",
+    :aliases => "-u"
     class_option :vimdorc,
-      :type    => :string,
-      :default => File.expand_path("~/.vimdorc"),
-      :banner  => "path to vimdo rc",
-      :aliases => "-c"
+    :type    => :string,
+    :default => File.expand_path("~/.vimdorc"),
+    :banner  => "path to vimdo rc",
+    :aliases => "-c"
     class_option "no-color",
-      :type   => :boolean,
-      :banner => "disable colorization in output"
+    :type   => :boolean,
+    :banner => "disable colorization in output"
     class_option :verbose,
-      :type    => :boolean,
-      :banner  => "enable verbose output mode",
-      :aliases => "-v"
+    :type    => :boolean,
+    :banner  => "enable verbose output mode",
+    :aliases => "-v"
 
     def initialize(*)
       super
@@ -68,14 +68,30 @@ module VimDo
       [from, to].each do |f|
         raise PathError "#{f} is not readable!" unless File.readable?(f)
       end
-      from = File.expand_path(from)
-      to = File.expand_path(to)
       from, to = [from, to].map {|f| File.expand_path(f) }
 
-      commands('tabnew', 'edit '+Vimrunner::Path.new(from), 'diffsplit '+Vimrunner::Path.new(to))
+      commands('tabedit '+Vimrunner::Path.new(from), 'diffsplit '+Vimrunner::Path.new(to))
       vim.foreground
     end
 
+    desc "diffpatch", "diffpatch in vim"
+    method_option :patch, 
+      :aliases  => "-p"         ,
+      :required => true         ,
+      :type     => :string      ,
+      :desc     => "patch file"
+    def diffpatch(file)
+      patch = options[:patch]
+      [file, patch].each do |f|
+        unless File.readable?(f)
+          raise PathError "#{f} is not readable!"
+        end
+      end
+      file, patch = [file, patch].map {|f| File.expand_path(f) }
+
+      commands('edit '+Vimrunner::Path.new(file), 'vertical diffpatch '+Vimrunner::Path.new(patch))
+      vim.foreground
+    end
 
 
 
@@ -95,13 +111,13 @@ module VimDo
       local, merge, remote = [local, merge, remote].map {|f| File.expand_path(f) }
 
       merge_command =
-        'tabnew<Bar>edit ' + Vimrunner::Path.new(local) +
-        '<Bar>diffsplit '  + Vimrunner::Path.new(merge) +
-        '<Bar>diffsplit '  + Vimrunner::Path.new(remote)
+      'tabnew<Bar>edit ' + Vimrunner::Path.new(local) +
+      '<Bar>diffsplit '  + Vimrunner::Path.new(merge) +
+      '<Bar>diffsplit '  + Vimrunner::Path.new(remote)
 
       if base
         base_split_command =
-          "<Bar>diffsplit #{Vimrunner::Path.new(File.expand_path(base))}<Bar>wincmd J"
+        "<Bar>diffsplit #{Vimrunner::Path.new(File.expand_path(base))}<Bar>wincmd J"
       else
         base_split_command = ''
       end
@@ -117,7 +133,7 @@ module VimDo
       raise UndefinedCommandError, "autocomplete should be intercepted."
     end
 
-  private
+    private
     def vim
       @vim ||= VimDo.connect(options)
     end
