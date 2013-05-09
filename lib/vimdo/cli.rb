@@ -70,7 +70,7 @@ module VimDo
       end
       from, to = [from, to].map {|f| File.expand_path(f) }
 
-      commands('tabedit '+Vimrunner::Path.new(from), 'diffsplit '+Vimrunner::Path.new(to))
+      commands("tabedit #{path(from)}", "diffsplit #{path(to)}")
       vim.foreground
     end
 
@@ -89,7 +89,7 @@ module VimDo
       end
       file, patch = [file, patch].map {|f| File.expand_path(f) }
 
-      commands('edit '+Vimrunner::Path.new(file), 'vertical diffpatch '+Vimrunner::Path.new(patch))
+      commands("edit #{path(file)}", "vertical diffpatch #{path(patch)}")
       vim.foreground
     end
 
@@ -111,13 +111,13 @@ module VimDo
       local, merge, remote = [local, merge, remote].map {|f| File.expand_path(f) }
 
       merge_command =
-      'tabnew<Bar>edit ' + Vimrunner::Path.new(local) +
-      '<Bar>diffsplit '  + Vimrunner::Path.new(merge) +
-      '<Bar>diffsplit '  + Vimrunner::Path.new(remote)
+      "tabnew<Bar>edit #{path(local)}" +
+      "<Bar>diffsplit #{path(merge)}"  +
+      "<Bar>diffsplit #{path(remote)}"
 
       if base
         base_split_command =
-        "<Bar>diffsplit #{Vimrunner::Path.new(File.expand_path(base))}<Bar>wincmd J"
+        "<Bar>diffsplit #{path(File.expand_path(base))}<Bar>wincmd J"
       else
         base_split_command = ''
       end
@@ -134,6 +134,9 @@ module VimDo
     end
 
     private
+    def path(p)
+      Vimrunner::Path.new(p)
+    end
     def vim
       @vim ||= VimDo.connect(options)
     end
