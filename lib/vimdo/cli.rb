@@ -57,9 +57,15 @@ module VimDo
     end
 
 
-    desc "edit",  "edit file +filename+ with Vim"
+    desc "edit",  "edit file +filename[:line]+ with Vim"
     def edit(filename)
+      linenr = nil
+      if /(.*):(\d+):?/.match(filename)
+        filename = $1
+        linenr = $2
+      end 
       vim.edit(File.expand_path(filename))
+      commands(linenr) if linenr
       vim.foreground
     end
 
